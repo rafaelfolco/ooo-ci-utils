@@ -1,4 +1,3 @@
-
 # Install 
 Grafana w/ Graphite as data source on (CentOS) localhost 
 
@@ -46,6 +45,76 @@ $ sudo service grafana-server start
     echo "foo:20|g" | nc -u -w1 172.17.0.1 8125
     ```
 1. Save your dashboard
+
+# grafyaml
+1. Clone and configure grafyaml
+```sh
+https://github.com/openstack-infra/grafyaml.git
+cd grafyaml
+sudo pip install -e requirements.txt
+sudo python setup.py install
+```
+1. Create an API key
+http://localhost:3000/org/apikeys
+1. Create your dashboard and save as YAML (test-ooo.yaml)
+```
+dashboard:
+  title: 'TripleO CI Metrics'
+  rows:
+    - title: Folco's Row
+      height: 100px
+      panels:
+        - title: Folco's Panel
+          content: |
+            **This is a Grafana PoC using Graphite as data source. That's All Folco's**
+          type: text
+
+    - title: Deployment Time
+      showTitle: true
+      height: 250px
+      panels:
+        - title: Undercloud Deployment Time
+          type: graph
+          span: 6
+          leftYAxisLabel: "time"
+          y_formats:
+            - s
+            - none
+          targets:
+            - target: stats.gauges.undercloud_deployment_time
+        - title: Overcloud Deployment Time
+          type: graph
+          span: 6
+          leftYAxisLabel: "time"
+          y_formats:
+            - s
+            - none
+          targets:
+            - target: stats.gauges.overcloud_deployment_time
+```
+1. Edit your config file (etc/grafyaml.conf)
+```
+#...
+[grafana]
+# URL for grafana server. (string value)
+url = http://localhost:3000
+
+# API key for access grafana. (string value)
+apikey = eyJrIjoiNmFGSDhYbW5EMXlYa0ZLQm5wdDVoQnMyRVp2Q2FtNHQiLCJuIjoidHJpcGxlbyIsImlkIjoxfQ==
+#...
+```
+1. Test your dashboard
+```sh
+grafana-dashboard --config-file etc/grafyaml.conf validate test-ooo.yaml
+INFO:grafana_dashboards.cmd:Validating schema in test-ooo.yaml
+SUCCESS!
+
+grafana-dashboard --config-file etc/grafyaml.conf update test-ooo.yaml
+INFO:grafana_dashboards.cmd:Updating schema in test-ooo.yaml
+INFO:grafana_dashboards.builder:Number of datasources to be updated: 0
+INFO:grafana_dashboards.builder:Number of dashboards to be updated: 1
+```
+![Grafana Setup](/grafana-poc.png)
 
 # References
 * https://graphite.readthedocs.io/en/latest/install.html
