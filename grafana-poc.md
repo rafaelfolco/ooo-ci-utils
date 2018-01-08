@@ -114,7 +114,7 @@ INFO:grafana_dashboards.cmd:Updating schema in test-ooo.yaml
 INFO:grafana_dashboards.builder:Number of datasources to be updated: 0
 INFO:grafana_dashboards.builder:Number of dashboards to be updated: 1
 ```
-![Grafana Setup](/grafana-poc.png)
+![Grafana Setup](/grafana_poc.png)
 
 # References
 * https://graphite.readthedocs.io/en/latest/install.html
