@@ -42,9 +42,13 @@ On `$VIRTHOST`:
    $ git clone https://github.com/openstack/tripleo-quickstart.git
    $ cd tripleo-quickstart
    ```
+ - Install deps
+   ```sh
+   $ bash quickstart.sh --install-deps
+   ```
  - Run quickstart to only create libvirt guests (TripleO won't be
    configured) on localhost (use loopback address 127.0.0.2)
-   ```sh 
+   ```sh
    $ bash quickstart.sh --tags all --playbook quickstart.yml 127.0.0.2
    ```
 
